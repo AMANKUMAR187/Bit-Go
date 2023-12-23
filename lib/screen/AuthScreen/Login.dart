@@ -1,6 +1,9 @@
+import 'package:bit_go/constants/Rouets.dart';
 import 'package:bit_go/constants/global_variable.dart';
+import 'package:bit_go/screen/AuthScreen/Forget.dart';
+import 'package:bit_go/screen/AuthScreen/Register.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,125 +13,198 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+   bool isPassword = true;
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-          body: Stack(
+    return  Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              //GlobalVariable.Black26,
+              GlobalVariable.grey,
+              GlobalVariable.SecondaryColor,
+              //GlobalVariable.PrimaryColor,
+              GlobalVariable.Black26,
+              GlobalVariable.SecondaryColor,
+              GlobalVariable.grey,
+            ],
+          )),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: _page(),
+      ),
+    );
+  }
+
+  Widget _page() {
+    return  SingleChildScrollView(
+      child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      GlobalVariable.backgroundColor,
-                      GlobalVariable.SecondaryColor,
-                      GlobalVariable.greyBackgroundColor,
-                    ]),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 60.0, left: 22),
-                    child: Text(
-                      'Hello\nSign in!',
-                      style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                const SizedBox(height: 50),
+                Text('Welcome',
+                style: TextStyle(fontWeight: FontWeight.bold,fontSize: 35),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 200.0),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-                      color: Colors.white,
-                    ),
-                    height: double.infinity,
-                    width: double.infinity,
-                    child:  Padding(
-                      padding: const EdgeInsets.only(left: 18.0,right: 18),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const TextField(
-                            decoration: InputDecoration(
-                                suffixIcon: Icon(Icons.check,color: Colors.grey,),
-                                label: Text('Gmail',style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: GlobalVariable.greyBackgroundColor,
-                                ),)
-                            ),
-                          ),
-                          const TextField(
-                            decoration: InputDecoration(
-                                suffixIcon: Icon(Icons.visibility_off,color: Colors.grey,),
-                                label: Text('Password',style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                   color: GlobalVariable.greyBackgroundColor,
-                                ),)
-                            ),
-                          ),
-                          const SizedBox(height: 20,),
-                          const Align(
-                            alignment: Alignment.centerRight,
-                            child: Text('Forgot Password?',style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              color: GlobalVariable.greyBackgroundColor,
-                            ),),
-                          ),
-                          const SizedBox(height: 70,),
-                          InkWell(
-                            onTap: (){
-                              print('aman');
-                            },
-                            child: Container(
-                              height: 55,
-                              width: 300,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                gradient: const LinearGradient(
-                                    colors: [
-                                      GlobalVariable.backgroundColor,
-                                      GlobalVariable.SecondaryColor,
-                                      GlobalVariable.greyBackgroundColor,
-                                    ]
-                                ),
-                              ),
-                              child: const Center(child: Text('SIGN IN',style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white
-                              ),),),
-                            ),
-                          ),
-                          const SizedBox(height: 150,),
-                          const Align(
-                            alignment: Alignment.bottomRight,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("Don't have account?",style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey
-                                ),),
-                                Text("Sign up",style: TextStyle(///done login page
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                    color: Colors.black
-                                ),),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                const SizedBox(height: 5),
+                Text('Sign-in',
+                  style: TextStyle(fontSize: 30),
                 ),
+                const SizedBox(height: 10),
+                _icon(),
+                const SizedBox(height: 50),
+                _inputField("Enter your email","Email", usernameController),
+                const SizedBox(height: 20),
+                _inputField("Enter your password","Password", passwordController),
+                const SizedBox(height: 1),
+                _forget(),
+                const SizedBox(height: 50),
+                _loginBtn(),
+                const SizedBox(height: 20),
+                _extraText(),
               ],
             ),
-          );
+          ),
+      ),
+    );
+  }
+
+  Widget _icon() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, width: 2),
+          shape: BoxShape.circle),
+      child: const Icon(Icons.person, color: Colors.white, size: 120),
+    );
+  }
+
+  Widget _inputField(String hintText, String labeltext, TextEditingController controller,
+        ) {
+    var border = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: const BorderSide(color: Colors.white));
+
+       if(labeltext=="Email"){
+         return TextField(
+           style: const TextStyle(color: Colors.white),
+           controller: controller,
+           decoration: InputDecoration(
+             hintText: hintText,
+             labelText: labeltext,
+             labelStyle: const TextStyle(color: Colors.white70),
+             hintStyle: const TextStyle(color: Colors.white70),
+             enabledBorder: border,
+             focusedBorder: border,
+             suffixIcon: Icon(Icons.email,color: Colors.white60,
+             ),
+           ),
+
+         );
+       }
+        else return  TextField(
+          style: const TextStyle(color: Colors.white),
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hintText,
+            labelText: labeltext,
+            labelStyle: const TextStyle(color: Colors.white70),
+            hintStyle: const TextStyle(color: Colors.white70),
+            enabledBorder: border,
+            focusedBorder: border,
+            suffixIcon: CupertinoButton(
+                onPressed: (){
+                  setState(() {
+                    isPassword = !isPassword;
+                  });
+                },
+                child: Icon(
+                     isPassword ?
+                    Icons.visibility
+                   : Icons.visibility_off,
+                  color: Colors.white60,
+                )),
+          ),
+
+          obscureText: isPassword,
+        );
+
+
+  }
+ Widget _forget(){
+   return  Row(
+       mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          CupertinoButton(
+            onPressed: (){
+              Routes.instance.push(widget: ForgetScreen(), context: context);
+            },
+            child: Container(
+              child: Text('Forget Password?',
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  fontSize: 16,
+                  color: GlobalVariable.PrimaryColor,
+                ),
+              ),
+            ),
+          ),
+        ],
+
+   );
+ }
+
+  Widget _loginBtn() {
+    return ElevatedButton(
+      onPressed: () {
+        debugPrint("Username : " + usernameController.text);
+        debugPrint("Password : " + passwordController.text);
+      },
+      child: const SizedBox(
+          width: double.infinity,
+          child: Text(
+            "Sign-in ",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20),
+          )),
+      style: ElevatedButton.styleFrom(
+        shape: const StadiumBorder(),
+        primary: Colors.grey,
+        onPrimary: Colors.black54,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+      ),
+    );
+  }
+
+  Widget _extraText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Already have account?",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+        TextButton(
+            onPressed: (){
+              Routes.instance.push(widget: SignupScreen(), context: context);
+            },
+
+            child: Text("Register",
+             style: TextStyle(fontSize: 20,
+               decoration: TextDecoration.underline,
+               color: GlobalVariable.PrimaryColor,
+             )
+            ),
+        )
+      ],
+    );
+
   }
 }
+
